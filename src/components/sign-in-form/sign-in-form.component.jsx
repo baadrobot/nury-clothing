@@ -26,16 +26,14 @@ const SignInForm = () => {
     }
 
     const signInWithGoogle = async () => {
-        const {user} = await signInWithGooglePopop();
-        await createUserDocumentFromAuth(user);
+        await signInWithGooglePopop();
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         
         try {
-            const response = await signInAuthUserWithEmailAndPassword(email, password);
-            console.log(response)
+            const user = await signInAuthUserWithEmailAndPassword(email, password);
             resetFormFields();
         } catch (error) {
             switch (error.code) {

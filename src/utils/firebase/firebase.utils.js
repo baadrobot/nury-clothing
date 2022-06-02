@@ -7,6 +7,8 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -23,24 +25,25 @@ const firebaseConfig = {
     storageBucket: "nury-clothing-db.appspot.com",
     messagingSenderId: "478159317066",
     appId: "1:478159317066:web:7ca9068879d83a28f3deb3"
-  };
+};
   
-  // Initialize Firebase
-  const firebaseApp = initializeApp(firebaseConfig);
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
 
-  const googleProvider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-  googleProvider.setCustomParameters({
-      prompt: "select_account"
-  });
+googleProvider.setCustomParameters({
+    prompt: "select_account"
+});
+  
 
-  export const auth = getAuth();
-  export const signInWithGooglePopop = () => signInWithPopup(auth, googleProvider);
-  export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
+export const auth = getAuth();
+export const signInWithGooglePopop = () => signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
-  export const db = getFirestore();
+export const db = getFirestore();
 
-  export const createUserDocumentFromAuth = async (
+export const createUserDocumentFromAuth = async (
       userAuth, 
       // изначально это пустой объект, 
       // это надо для того чтоб если вдруг в displayName ничего не придёт
@@ -72,18 +75,22 @@ const firebaseConfig = {
     }
     
     return userDocRef;
-  }
+}
 
-  export const createAuthUserWithEmailAndPassword = async (email, password) => {
-      // для защиты
-      if(!email || !password) return;
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    // для защиты
+    if(!email || !password) return;
 
-      return await createUserWithEmailAndPassword(auth, email, password);
-  }
+    return await createUserWithEmailAndPassword(auth, email, password);
+}
 
-  export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
     // для защиты
     if(!email || !password) return;
 
     return await signInWithEmailAndPassword(auth, email, password);
 }
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
