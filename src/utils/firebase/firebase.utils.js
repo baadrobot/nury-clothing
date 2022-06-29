@@ -1,4 +1,3 @@
-import { async } from '@firebase/util';
 import {initializeApp} from 'firebase/app';
 import {
     getAuth, 
@@ -14,7 +13,11 @@ import {
     getFirestore,
     doc,
     getDoc,
-    setDoc
+    setDoc,
+    collection,
+    writeBatch,
+    query,
+    getDocs,
 } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
@@ -38,13 +41,65 @@ googleProvider.setCustomParameters({
   
 
 export const auth = getAuth();
-export const signInWithGooglePopop = () => signInWithPopup(auth, googleProvider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    })
+
+    await batch.commit();
+    console.log('done');
+}
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories');
+    const q = query(collectionRef);
+
+    const querySnapshot = await getDocs(q);
+    // полученные данные с ДБ переводим в нужную структуру как ниже закоменнтировано
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const {title, items} = docSnapshot.data();
+        // т.к. ниже мы инициализировали что acc это объект, мы тут делаем следующее
+        // добавляем объекту ключ/свойство с тайтлом текущей итерации от reduce
+        // и задаем значение текущих items, формируя т.н. Hashtable 
+        // (формат хранения данных, который в некоторых случаях удобней простых массивов) 
+        // https://www.kirupa.com/html5/hashtables_vs_arrays.htm
+        acc[title.toLowerCase()] = items;
+        return acc;
+    }, {})
+
+    return categoryMap;
+
+    // вот такая структура должна быть
+    // {
+    //     hats: {
+    //         title: 'Hats',
+    //         items: [
+    //             {},
+    //             {}
+    //         ]
+    //     },
+    //     sneakers: {
+    //         title: 'sneakers',
+    //         items: [
+    //             {},
+    //             {}
+    //         ]
+    //     }
+    // }
+}
+
 export const createUserDocumentFromAuth = async (
-      userAuth, 
+      userAuth,
+      displayName,
       // изначально это пустой объект, 
       // это надо для того чтоб если вдруг в displayName ничего не придёт
       additionalInformation = {}
@@ -57,9 +112,9 @@ export const createUserDocumentFromAuth = async (
     const userSnapshot = await getDoc(userDocRef);
 
     if(!userSnapshot.exists()) {
-        const {displayName, email} = userAuth;
+        const { email} = userAuth;
         const createdAt = new Date();
-
+        
         try {
             await setDoc(userDocRef, {
                 displayName, 
@@ -67,7 +122,7 @@ export const createUserDocumentFromAuth = async (
                 createdAt,
                 // если displayName не передали(null) то используя оператор спреда(...)
                 // добавить на место displayName то что приедт
-                ...additionalInformation
+                ...additionalInformation,
             });
         } catch (error) {
             console.log('error creating the user', error);

@@ -1,4 +1,13 @@
-import './checkout-item.styles.scss';
+import {
+    CheckoutItemContainer, 
+    ImageContainer, 
+    BaseSpan,
+    ItemPrice,
+    ItemQuantity,
+    QuantityValue,
+    Arrow,
+    RemoveButton,
+} from './checkout-item.styles.jsx';
 import { CartContext } from '../../contexts/cart.context';
 import { useContext } from 'react';
 
@@ -16,26 +25,26 @@ const CheckoutItem = ({cartItem}) => {
     const removeItemHandler = () => removeItemFromCart(cartItem);
 
     return (
-        <div className='checkout-item-container'>
-            <div className='image-container'>
+        <CheckoutItemContainer>
+            <ImageContainer>
                 <img src={imageUrl} alt={name}/>
-            </div>
-            <span className='name'>{name}</span>
-            <span className='quantity'>
-                <div className='arrow' onClick={removeItemHandler}>
+            </ImageContainer>
+            <BaseSpan>{name}</BaseSpan>
+            <ItemQuantity>
+                <Arrow onClick={removeItemHandler}>
                     &#10094;
-                </div>
-                <span className='value'>
+                </Arrow>
+                <QuantityValue>
                     {quantity}
-                </span>
-                <div className='arrow' onClick={addItemHanlder}>
+                </QuantityValue>
+                <Arrow onClick={addItemHanlder}>
                     &#10095;
-                </div>
-            </span>
-            <span className='price'>{price}</span>
+                </Arrow>
+            </ItemQuantity>
+            <ItemPrice className='price'>{price}</ItemPrice>
             {/* эта кнопка должна удалять всю позицию */}
-            <div className='remove-button' onClick={clearItemHandler}>&#10005;</div>
-        </div>
+            <RemoveButton onClick={clearItemHandler}>&#10005;</RemoveButton>
+        </CheckoutItemContainer>
     )
 }
 

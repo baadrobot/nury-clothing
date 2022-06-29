@@ -10,7 +10,7 @@ import { CartContext } from "../../../contexts/cart.context";
 
 import { signOutUser } from "../../../utils/firebase/firebase.utils";
 
-import './navigation.styles.scss';
+import {NavigationContainer, LogoContainer, NavLinks, NavLink } from './navigation.styles';
 
 const Navigation = () => {
     const {currentUser} = useContext(UserContext);
@@ -18,31 +18,31 @@ const Navigation = () => {
 
     return (
       <Fragment>
-        <div className="navigation">
-            <Link className="logo-container" to="/">
+        <NavigationContainer>
+            <LogoContainer to="/">
                 <div className="logo">
                     <CrownLogo/>
                 </div>
-            </Link>
-            <div className="nav-links-container">
-                <Link className="nav-link" to="/shop">
+            </LogoContainer>
+            <NavLinks>
+                <NavLink to="/shop">
                     SHOP
-                </Link>
+                </NavLink>
                 {currentUser 
                     ? (
-                        <span className="nav-link" onClick={signOutUser}>SIGN OUT</span>
+                        <NavLink as='span' onClick={signOutUser}>SIGN OUT</NavLink>
                     )
                     : (
-                        <Link className="nav-link" to="/auth">SIGN IN</Link>
+                        <NavLink to="/auth">SIGN IN</NavLink>
                     )
                 }
                 <CartIcon/>
-            </div>
+            </NavLinks>
             {/* Если первое и второе выражение true, 
             то вернуть/инициализировать то что передано последним выражением(CardDropdown), 
             К к слову компоненты всегда возвращают true потому что это функции */}
             {isCartOpen && <CardDropdown/>}
-        </div>
+        </NavigationContainer>
         <Outlet/>
       </Fragment>
     );

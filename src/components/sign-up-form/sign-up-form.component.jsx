@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { 
+    createAuthUserWithEmailAndPassword,
     createUserDocumentFromAuth,
-    createAuthUserWithEmailAndPassword
 } from "../../utils/firebase/firebase.utils";
 
 import FormInput from "../form-input/form-input.component";
-import './sign-up-form.styles.scss';
 import Button from "../button/button.component";
+
+import {SignUpContainer} from './sign-up-form.styles.jsx';
 
 
 const defaultFormFields = {
@@ -30,7 +31,7 @@ const SignUpForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         
-        if(password != confirmPassword) {
+        if(password !== confirmPassword) {
             alert("password do no match");
             return;
         }
@@ -40,7 +41,8 @@ const SignUpForm = () => {
                 email,
                 password
             );
-            await createUserDocumentFromAuth(user, {displayName});
+
+            await createUserDocumentFromAuth(user, displayName);
             resetFormFields();
         } catch (error) {
             if(error.code === 'auth/email-already-in-use') {
@@ -59,7 +61,7 @@ const SignUpForm = () => {
     }
 
     return(
-        <div className="sign-up-container">
+        <SignUpContainer>
             <h2>Don't have an account?</h2>
             <span>Sign up with your email and password</span>
             <form >
@@ -104,14 +106,14 @@ const SignUpForm = () => {
                 />
                 
                 <Button 
-                    type="submit" 
-                    buttonType="default" 
+                    type="submit"
                     onClick={handleSubmit}
                 >
+                {/* кнопкао не записывает в БД Дисплей нейм */}
                     Sign up
                 </Button>
             </form>
-        </div>
+        </SignUpContainer>
     )
 }
 
