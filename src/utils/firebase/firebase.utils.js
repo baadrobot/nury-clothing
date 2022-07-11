@@ -65,36 +65,7 @@ export const getCategoriesAndDocuments = async () => {
 
     const querySnapshot = await getDocs(q);
     // полученные данные с ДБ переводим в нужную структуру как ниже закоменнтировано
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const {title, items} = docSnapshot.data();
-        // т.к. ниже мы инициализировали что acc это объект, мы тут делаем следующее
-        // добавляем объекту ключ/свойство с тайтлом текущей итерации от reduce
-        // и задаем значение текущих items, формируя т.н. Hashtable 
-        // (формат хранения данных, который в некоторых случаях удобней простых массивов) 
-        // https://www.kirupa.com/html5/hashtables_vs_arrays.htm
-        acc[title.toLowerCase()] = items;
-        return acc;
-    }, {})
-
-    return categoryMap;
-
-    // вот такая структура должна быть
-    // {
-    //     hats: {
-    //         title: 'Hats',
-    //         items: [
-    //             {},
-    //             {}
-    //         ]
-    //     },
-    //     sneakers: {
-    //         title: 'sneakers',
-    //         items: [
-    //             {},
-    //             {}
-    //         ]
-    //     }
-    // }
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 }
 
 export const createUserDocumentFromAuth = async (
