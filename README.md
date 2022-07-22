@@ -1,1 +1,1 @@
-This is my practice making e-commerce website using React
+React practice making e-commerce website.
