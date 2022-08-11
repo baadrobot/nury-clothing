@@ -1,7 +1,7 @@
 import {CheckoutContainer, CheckoutHeader, Total} from './checkout.styles.jsx';
 
 import {useSelector} from 'react-redux';
-import { selectCartItems, selectCartTotal } from '../../../store/cart/cart.selector.js';
+import { selectCartItems, selectCartTotal } from '../../../store/cart/cart.selector';
 
 import CheckoutItem from '../../checkout-item/checkout-item.component';
 import PaymentForm from '../../payment-form/payment-form.component.jsx';

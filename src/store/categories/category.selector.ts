@@ -1,6 +1,9 @@
 import { createSelector } from "reselect";
+import { RootState } from "../store";
+import { CategoriesState } from "./category.reducer";
+import { CategoryMap } from "./category.types";
 
-const selectCategoryReducer = (state) => state.categories;
+const selectCategoryReducer = (state: RootState): CategoriesState => state.categories;
 
 export const selectCategories = createSelector(
     [selectCategoryReducer],
@@ -11,7 +14,7 @@ export const selectCategories = createSelector(
 
 export const selectCategoriesMap = createSelector(
     [selectCategories],
-    (categories) =>
+    (categories): CategoryMap =>
     // перезапускать reduce только если мемоизированный массив (categories) отличается от [selectCategories]
         categories.reduce((acc, category) => {
             const {title, items} = category;
@@ -22,7 +25,7 @@ export const selectCategoriesMap = createSelector(
             // https://www.kirupa.com/html5/hashtables_vs_arrays.htm
             acc[title.toLowerCase()] = items;
             return acc;
-        }, {})
+        }, {} as CategoryMap)
 );
 
     // вот такая структура должна быть
