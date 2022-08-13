@@ -1,9 +1,6 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
+import { AuthError, AuthErrorCodes } from "firebase/auth";
 import { useDispatch } from "react-redux/es/exports";
-import { 
-    createAuthUserWithEmailAndPassword,
-    createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils";
 
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
@@ -31,7 +28,7 @@ const SignUpForm = () => {
         setFormFields(defaultFormFields);
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
         if(password !== confirmPassword) {
@@ -49,7 +46,7 @@ const SignUpForm = () => {
             dispatch(signUpStart(email, password, displayName));
             resetFormFields();
         } catch (error) {
-            if(error.code === 'auth/email-already-in-use') {
+            if((error as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
                 alert('Cannt create user, email already in use')
             } else {
                 console.log('USER CREATION ERROR ', error);
@@ -57,7 +54,7 @@ const SignUpForm = () => {
         }
     }
 
-    const handleChange = (event) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         // get name and value from targeted input
         const {name, value} = event.target;
         // change state with new value by its name
@@ -111,7 +108,7 @@ const SignUpForm = () => {
                 
                 <Button 
                     type="submit"
-                    onClick={handleSubmit}
+                    // onClick={handleSubmit}
                 >
                 {/* кнопкао не записывает в БД Дисплей нейм */}
                     Sign up

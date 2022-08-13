@@ -9,8 +9,12 @@ import { selectCategoriesMap, selectIsLoading } from '../../../store/categories/
 
 import {CategoryContainer, CategoryTitle} from './category.styles.jsx';
 
+type CategoryRouteParams = {
+    category: string;
+}
+
 const Category = () => {
-    const {category} = useParams();
+    const {category} = useParams<keyof CategoryRouteParams>() as CategoryRouteParams;
     const categoriesMap = useSelector(selectCategoriesMap);
     const isLoading = useSelector(selectIsLoading);
     const [products, setProducts] = useState(categoriesMap[category]);
