@@ -15,6 +15,7 @@ import {
 
 const App = () => {
   const dispatch = useDispatch();
+  console.log('hello')
 
   useEffect(() => {
     // const unsubscribe = onAuthStateChangedListener((user) => {

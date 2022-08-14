@@ -10,7 +10,7 @@ import {
   signInWithGooglePopup,
 } from '../../utils/firebase/firebase.utils';
 
-import {SignUpContainer, ButtonsContainer} from './sign-in-form.styles.js';
+import {SignUpContainer, ButtonsContainer} from './sign-in-form.styles';
 import { googleSignInStart, emailSignInStart } from '../../store/user/user.action';
 
 const defaultFormFields = {
