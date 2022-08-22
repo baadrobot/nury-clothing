@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import CartIcon from "../../cart-icon/cart-icon.component";
-import CardDropdown from "../../card-dropdown/card-dropdown.component";
+import CardDropdown from "../../card-dropdown/cart-dropdown.component";
 
 import { ReactComponent as CrownLogo } from "../../../assets/crown-logo.svg";
 

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCartItems } from '../../store/cart/cart.selector';
 import { addItemToCart, clearItemFromCart, removeItemFromCart } from '../../store/cart/cart.action';
@@ -20,7 +20,7 @@ type CheckoutItemProps = {
     cartItem: CartItem;
 }
 
-const CheckoutItem: FC<CheckoutItemProps> = ({cartItem}) => {
+const CheckoutItem: FC<CheckoutItemProps> = memo(({cartItem}) => {
     const {name, imageUrl, price, quantity} = cartItem;
     const cartItems = useSelector(selectCartItems);
     const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const CheckoutItem: FC<CheckoutItemProps> = ({cartItem}) => {
             {/* эта кнопка должна удалять всю позицию */}
             <RemoveButton onClick={clearItemHandler}>&#10005;</RemoveButton>
         </CheckoutItemContainer>
-    )
-}
+    );
+});
 
 export default CheckoutItem;

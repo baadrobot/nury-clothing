@@ -1,42 +1,39 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import Home from './components/routes/home/home.component';
-import Navigation from './components/routes/navigation/navigation.component';
-import Authentication from './components/routes/authentication/authentication.component';
-import Shop from './components/routes/shop/shop.component';
-import Checkout from './components/routes/checkout/checkout.component';
+import Spinner from './components/spinner/spinner.component';
 import { setCurrentUser, checkUserSession } from './store/user/user.action';
 import {
   onAuthStateChangedListener,
   createUserDocumentFromAuth,
 } from './utils/firebase/firebase.utils';
 
+
+const Shop = lazy(() => import('./components/routes/shop/shop.component'));
+const Checkout = lazy(() => import('./components/routes/checkout/checkout.component'));
+const Navigation = lazy(() => import('./components/routes/navigation/navigation.component'));
+const Home = lazy(() => import('./components/routes/home/home.component'));
+const Authentication = lazy(() => import('./components/routes/authentication/authentication.component')); 
+
 const App = () => {
   const dispatch = useDispatch();
-  console.log('hello')
 
   useEffect(() => {
-    // const unsubscribe = onAuthStateChangedListener((user) => {
-    //   if (user) {
-    //     createUserDocumentFromAuth(user);
-    //   }
-    //   dispatch(setCurrentUser(user));
-    // });
-    // return unsubscribe;
     dispatch(checkUserSession());
   }, []);
 
   return (
-    <Routes>
-      <Route path='/' element={<Navigation />}>
-        <Route index element={<Home />} />
-        <Route path='shop/*' element={<Shop />} />
-        <Route path='auth' element={<Authentication />} />
-        <Route path='checkout' element={<Checkout />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={<Spinner/>}>
+      <Routes>
+        <Route path='/' element={<Navigation />}>
+          <Route index element={<Home />} />
+          <Route path='shop/*' element={<Shop />} />
+          <Route path='auth' element={<Authentication />} />
+          <Route path='checkout' element={<Checkout />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 
