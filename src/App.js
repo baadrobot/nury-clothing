@@ -3,11 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Spinner from './components/spinner/spinner.component';
-import { setCurrentUser, checkUserSession } from './store/user/user.action';
-import {
-  onAuthStateChangedListener,
-  createUserDocumentFromAuth,
-} from './utils/firebase/firebase.utils';
+import { checkUserSession } from './store/user/user.action';
+
+import { GlobalStyle } from './global.styles';
 
 
 const Shop = lazy(() => import('./components/routes/shop/shop.component'));
@@ -25,6 +23,7 @@ const App = () => {
 
   return (
     <Suspense fallback={<Spinner/>}>
+      <GlobalStyle/>
       <Routes>
         <Route path='/' element={<Navigation />}>
           <Route index element={<Home />} />
